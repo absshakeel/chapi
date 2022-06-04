@@ -1,6 +1,3 @@
-
-
-
 from pathlib import Path
 import os
 import sys
@@ -14,16 +11,7 @@ from django.core.management.utils import get_random_secret_key
 BASE_DIR = Path(__file__).resolve().parent.parent
 STATIC_DIR=os.path.join(BASE_DIR,'static')
 MEDIA_DIR=os.path.join(BASE_DIR,'media')
-# MEDIA_DIR = (
-#     BASE_DIR / 'media'
-# )
 
-# Quick-start development settings - unsuitable for production
-# See https://docs.djangoproject.com/en/3.2/howto/deployment/checklist/
-
-# SECURITY WARNING: keep the secret key used in production secret!
-# SECRET_KEY = 'django-insecure-7lg_3wtk+eq)6(&53l(1#um5flou_9(^t=^0k^9m1iz5wbdq1c'
-# for deploymnet 
 SECRET_KEY = os.getenv("DJANGO_SECRET_KEY", get_random_secret_key())
 
 # SECURITY WARNING: don't run with debug turned on in production!
@@ -112,20 +100,20 @@ if DEVELOPMENT_MODE is True:
 elif len(sys.argv) > 0 and sys.argv[1] != 'collectstatic':
     if os.getenv("DATABASE_URL", None) is None:
         raise Exception("DATABASE_URL environment variable not defined")
-    
     DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.postgresql',
-            'NAME': os.environ.get("DB_NAME"),                      
-            'USER': os.environ.get("DB_USERNAME"),
-            'PASSWORD': os.environ.get("DB_PASS"),
-            'HOST': os.environ.get("DB_HOST"),
-            'PORT': os.environ.get("DB_PORT"),
-        }
+        "default": dj_database_url.parse(os.environ.get("DATABASE_URL")),
     }
     # DATABASES = {
-    #     "default": dj_database_url.parse(os.environ.get("DATABASE_URL")),
+    #     'default': {
+    #         'ENGINE': 'django.db.backends.postgresql',
+    #         'NAME': os.environ.get("DB_NAME"),                      
+    #         'USER': os.environ.get("DB_USERNAME"),
+    #         'PASSWORD': os.environ.get("DB_PASS"),
+    #         'HOST': os.environ.get("DB_HOST"),
+    #         'PORT': os.environ.get("DB_PORT"),
+    #     }
     # }
+    
 # Password validation
 # https://docs.djangoproject.com/en/3.2/ref/settings/#auth-password-validators
 
@@ -164,6 +152,7 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 STATIC_DIRS = [STATIC_DIR,]
+STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
 
 # Media
 
